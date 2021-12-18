@@ -8,7 +8,7 @@ class Tree {
 
 tree = new Tree(
 	1, new Tree(2, new Tree(4, new Tree(8)), new Tree(5)),
-	new Tree(3, new Tree(6, new Tree(9), new Tree(10)), new Tree(7, new Tree(11), new Tree(12, null, new Tree(13)))));
+	new Tree(3, new Tree(6, new Tree(9), new Tree(10)), new Tree(7)));
 
 var height;
 
@@ -46,16 +46,16 @@ function set_white_nodes_and_edges(x, y, node) {
 	}
 }
 
-var nodeCount;
+var deepCount;
 
 function set_gray_nodes(x, y, node, i) {
 	if (node) {
-		if (nodeCount === i) return;
+		if (deepCount === i) return;
 		height += 10;
 		set_node(x, y, 'gray');
 		set_gray_nodes(x - 50, y + 50 + height, node.left, i);
 		if (!(node.left)) {
-			nodeCount++;
+			deepCount++;
 			set_node(x, y, 'black');
 		}
 		set_gray_nodes(x + 50, y + 50 + height, node.right, i);
@@ -64,10 +64,10 @@ function set_gray_nodes(x, y, node, i) {
 
 function set_black_nodes(x, y, node, i) {
 	if (node) {
-		if (nodeCount >= i) return;
+		if (deepCount >= i) return;
 		height += 10;
 		set_black_nodes(x - 50, y + 50 + height, node.left, i);
-		if (!(node.left)) nodeCount++;
+		if (!(node.left)) deepCount++;
 		set_node(x, y, 'black');
 		set_black_nodes(x + 50, y + 50 + height, node.right, i);
 	}
@@ -76,10 +76,15 @@ function set_black_nodes(x, y, node, i) {
 var grayNodes = 0;
 var blackNodes = 0;
 
-function next() {
+function draw() {
 	grayNodes++;
 	blackNodes = grayNodes - 1;
-	main(tree);
+	height = 0;
+	deepCount = 0;
+	set_gray_nodes(canvas.width / 2, 50, tree, grayNodes);
+	height = 0;
+	deepCount = 0;
+	set_black_nodes(canvas.width / 2, 50, tree, blackNodes);
 }
 
 function main(tree) {
@@ -92,12 +97,6 @@ function main(tree) {
 
 		height = 0;
 		set_white_nodes_and_edges(canvas.width / 2, 50, tree);
-		height = 0;
-		nodeCount = 0;
-		set_gray_nodes(canvas.width / 2, 50, tree, grayNodes);
-		height = 0;
-		nodeCount = 0;
-		set_black_nodes(canvas.width / 2, 50, tree, blackNodes);
 	}
 }
 

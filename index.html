@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Document</title>
-	</head>
-	<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
 		<font color="lightgray">white - unvisited nodes</font>
-		<br>
-		<font color="gray">gray - current nodes</font>
-		<br>
-		<font color="black">black - nodes in the recursion stack</font>
-		<br>
-		<button onClick="draw()">Next step</button>
-		<br>
-		<canvas id="canvas" width="700px" height="700px"></canvas>
+    <br />
+    <font color="gray">gray - current nodes</font>
+    <br />
+    <font color="black">black - nodes in the recursion stack</font>
+    <br />
+    <button onClick="draw()">Next step</button>
+    <button onClick="randomTree()">Random tree</button>
+		Max range: <input type="number" value="10" id="maxRange">
+ 		<br />
+    <canvas id="canvas" width="700px" height="700px"></canvas>
 		<script src="script.js"></script>
-	</body>
+  </body>
 </html>

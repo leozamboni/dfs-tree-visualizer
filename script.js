@@ -39,38 +39,46 @@ function random_tree() {
   main(tree)
 }
 
+
+var nodeRadius = 20;
 function draw_node(x, y, color) {
   ctx.beginPath();
   ctx.fillStyle = color;
-  ctx.arc(x, y, 20, 0, 2 * Math.PI);
+  ctx.arc(x, y, nodeRadius, 0, 2 * Math.PI);
   ctx.fill();
   ctx.stroke();
 }
 
+var nodeDistance = 50;
 function init_nodes_and_edges(x, y, node) {
   if (node) {
-    ctx.beginPath();
-    ctx.fillStyle = 'black';
-
     height += 10;
 
+    ctx.beginPath();
+
     if (node.left) {
-      ctx.moveTo(x, y)
-      ctx.lineTo(x - 50, y + 50 + height)
+      ctx.moveTo(x - nodeRadius / 2, y + nodeRadius)
+      ctx.lineTo(x - nodeDistance, y + nodeDistance + height)
     }
 
-    if (node.right) {
-      ctx.moveTo(x, y)
-      ctx.lineTo(x + 50, y + 50 + height)
-    }
-
+    ctx.fillStyle = 'black';
     ctx.fillText(node.value, x + 20, y + 20);
     ctx.stroke()
 
     draw_node(x, y, 'white');
 
-    init_nodes_and_edges(x - 50, y + 50 + height, node.left);
-    init_nodes_and_edges(x + 50, y + 50 + height, node.right);
+    init_nodes_and_edges(
+        x - nodeDistance, y + nodeDistance + height, node.left);
+
+    if (node.right) {
+      ctx.beginPath();
+      ctx.moveTo(x + nodeRadius / 2, y + nodeRadius)
+      ctx.lineTo(x + nodeDistance, y + nodeDistance + height)
+      ctx.stroke()
+    }
+
+    init_nodes_and_edges(
+        x + nodeDistance, y + nodeDistance + height, node.right);
   }
 }
 
@@ -84,13 +92,13 @@ function set_gray_nodes(x, y, node, i) {
 
     draw_node(x, y, 'gray');
 
-    set_gray_nodes(x - 50, y + 50 + height, node.left, i);
+    set_gray_nodes(x - nodeDistance, y + nodeDistance + height, node.left, i);
     if (!(node.left)) {
       deepCount++;
       draw_node(x, y, 'black');
     }
 
-    set_gray_nodes(x + 50, y + 50 + height, node.right, i);
+    set_gray_nodes(x + nodeDistance, y + nodeDistance + height, node.right, i);
   }
 }
 
@@ -101,12 +109,12 @@ function set_black_nodes(x, y, node, i) {
 
     height += 10;
 
-    set_black_nodes(x - 50, y + 50 + height, node.left, i);
+    set_black_nodes(x - nodeDistance, y + nodeDistance + height, node.left, i);
     if (!(node.left)) deepCount++;
 
     draw_node(x, y, 'black');
 
-    set_black_nodes(x + 50, y + 50 + height, node.right, i);
+    set_black_nodes(x + nodeDistance, y + nodeDistance + height, node.right, i);
   }
 }
 
@@ -118,12 +126,12 @@ function draw() {
 
   nodeBreak++;
 
-  set_gray_nodes(canvas.width / 2, 50, tree, nodeBreak);
+  set_gray_nodes(canvas.width / 2, nodeDistance, tree, nodeBreak);
   height = 0;
   deepCount = 0;
 
   set_black_nodes(
-      canvas.width / 2, 50, tree, nodeBreak > 1 ? nodeBreak - 1 : 0);
+      canvas.width / 2, nodeDistance, tree, nodeBreak > 1 ? nodeBreak - 1 : 0);
 }
 
 function main(tree) {
@@ -135,7 +143,7 @@ function main(tree) {
     ctx.font = '15px Arial';
 
     height = 0;
-    init_nodes_and_edges(canvas.width / 2, 50, tree);
+    init_nodes_and_edges(canvas.width / 2, nodeDistance, tree);
   }
 }
 

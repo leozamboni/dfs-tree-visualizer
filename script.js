@@ -25,21 +25,6 @@ function insert(node, value) {
   }
 }
 
-var tree;
-
-function random_tree() {
-  nodeBreak = 0;
-  maxRange = document.getElementById('maxRange').value;
-  tree = new Tree(Math.round(Math.random() * maxRange))
-
-  for (let i = 0; i < maxRange; ++i) {
-    insert(tree, Math.round(Math.random() * maxRange));
-  }
-
-  main(tree)
-}
-
-
 var nodeRadius = 20;
 function draw_node(x, y, color) {
   ctx.beginPath();
@@ -49,77 +34,71 @@ function draw_node(x, y, color) {
   ctx.stroke();
 }
 
+function draw_edge(x, y, direction) {
+  ctx.beginPath();
+  ctx.moveTo(
+      direction ? x + nodeRadius / 2 : x - nodeRadius / 2, y + nodeRadius)
+  ctx.lineTo(
+      direction ? x + nodeDistance : x - nodeDistance,
+      y + nodeDistance + height)
+  ctx.stroke();
+}
+
 var nodeDistance = 50;
 function init_nodes_and_edges(x, y, node) {
-  if (node) {
-    height += 10;
+  if (!node) return;
 
-    ctx.beginPath();
+  height += 10;
 
-    if (node.left) {
-      ctx.moveTo(x - nodeRadius / 2, y + nodeRadius)
-      ctx.lineTo(x - nodeDistance, y + nodeDistance + height)
-    }
+  if (node.left) draw_edge(x, y, false);
 
-    ctx.fillStyle = 'black';
-    ctx.fillText(node.value, x + 20, y + 20);
-    ctx.stroke()
+  ctx.beginPath();
+  ctx.fillStyle = 'black';
+  ctx.fillText(node.value, x + 20, y + 20);
+  ctx.stroke();
 
-    draw_node(x, y, 'white');
+  draw_node(x, y, 'white');
 
-    init_nodes_and_edges(
-        x - nodeDistance, y + nodeDistance + height, node.left);
+  init_nodes_and_edges(x - nodeDistance, y + nodeDistance + height, node.left);
 
-    if (node.right) {
-      ctx.beginPath();
-      ctx.moveTo(x + nodeRadius / 2, y + nodeRadius)
-      ctx.lineTo(x + nodeDistance, y + nodeDistance + height)
-      ctx.stroke()
-    }
+  if (node.right) draw_edge(x, y, true);
 
-    init_nodes_and_edges(
-        x + nodeDistance, y + nodeDistance + height, node.right);
-  }
+  init_nodes_and_edges(x + nodeDistance, y + nodeDistance + height, node.right);
 }
 
 var deepCount;
-
 function set_gray_nodes(x, y, node, i) {
-  if (node) {
-    if (deepCount === i) return;
+  if (!node || deepCount === i) return;
 
-    height += 10;
+  height += 10;
 
-    draw_node(x, y, 'gray');
+  draw_node(x, y, 'gray');
 
-    set_gray_nodes(x - nodeDistance, y + nodeDistance + height, node.left, i);
-    if (!(node.left)) {
-      deepCount++;
-      draw_node(x, y, 'black');
-    }
+  set_gray_nodes(x - nodeDistance, y + nodeDistance + height, node.left, i);
 
-    set_gray_nodes(x + nodeDistance, y + nodeDistance + height, node.right, i);
+  if (!(node.left)) {
+    deepCount++;
+    draw_node(x, y, 'black');
   }
+
+  set_gray_nodes(x + nodeDistance, y + nodeDistance + height, node.right, i);
 }
 
-
 function set_black_nodes(x, y, node, i) {
-  if (node) {
-    if (deepCount === i) return;
+  if (!node || deepCount === i) return;
 
-    height += 10;
+  height += 10;
 
-    set_black_nodes(x - nodeDistance, y + nodeDistance + height, node.left, i);
-    if (!(node.left)) deepCount++;
+  set_black_nodes(x - nodeDistance, y + nodeDistance + height, node.left, i);
 
-    draw_node(x, y, 'black');
+  if (!(node.left)) deepCount++;
 
-    set_black_nodes(x + nodeDistance, y + nodeDistance + height, node.right, i);
-  }
+  draw_node(x, y, 'black');
+
+  set_black_nodes(x + nodeDistance, y + nodeDistance + height, node.right, i);
 }
 
 var nodeBreak = 0;
-
 function draw() {
   height = 0;
   deepCount = 0;
@@ -134,6 +113,20 @@ function draw() {
       canvas.width / 2, nodeDistance, tree, nodeBreak > 1 ? nodeBreak - 1 : 0);
 }
 
+var tree;
+function random_tree() {
+  nodeBreak = 0;
+  maxRange = document.getElementById('maxRange').value;
+  tree = new Tree(Math.round(Math.random() * maxRange))
+
+  for (let i = 0; i < maxRange; ++i) {
+    insert(tree, Math.round(Math.random() * maxRange));
+  }
+
+  main(tree)
+}
+random_tree()
+
 function main(tree) {
   var canvas = document.getElementById('canvas');
 
@@ -146,5 +139,3 @@ function main(tree) {
     init_nodes_and_edges(canvas.width / 2, nodeDistance, tree);
   }
 }
-
-random_tree()

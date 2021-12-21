@@ -1,12 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script src="vizualizer.js"></script>
+    <script type="text/javascript">
+      var tree = null;
+      var nodeBreak = 0;
+      var deepCount = 0;
+      var nodeDistance = 50;
+      var nodeRadius = 20;
+
+      class Tree {
+        constructor(value, left, right) {
+          this.value = value;
+          this.left = left;
+          this.right = right;
+        }
+      }
+
+      function insert(node, value) {
+        while (1) {
+          if (node.value === value) return;
+          if (value > node.value && node.right) {
+            node = node.right;
+          } else if (value < node.value && node.left) {
+            node = node.left;
+          } else {
+            break;
+          }
+        }
+
+        if (value > node.value) {
+          node.right = new Tree(value);
+        } else {
+          node.left = new Tree(value);
+        }
+      }
+
+      function random_tree() {
+        nodeBreak = 0;
+        maxRange = document.getElementById("maxRange").value;
+        tree = new Tree(Math.round(Math.random() * maxRange));
+
+        for (let i = 0; i < maxRange; ++i) {
+          insert(tree, Math.round(Math.random() * maxRange));
+        }
+
+        main();
+      }
+
+      function main() {
+        if (!tree) random_tree();
+        var canvas = document.getElementById("canvas");
+
+        if (canvas.getContext) {
+          window.ctx = canvas.getContext("2d");
+          ctx.clearRect(10, 10, canvas.width, canvas.height);
+          ctx.font = "15px Arial";
+
+          height = 0;
+          init_nodes_and_edges(canvas.width / 2, nodeDistance, tree);
+        }
+      }
+    </script>
   </head>
-  <body>
-		<font color="lightgray">white - unvisited nodes</font>
+  <body onload="main();">
+    <font color="lightgray">white - unvisited nodes</font>
     <br />
     <font color="gray">gray - current nodes</font>
     <br />
@@ -14,9 +73,8 @@
     <br />
     <button onClick="draw()">Next step</button>
     <button onClick="random_tree()">Random tree</button>
-		Max range: <input type="number" value="10" id="maxRange">
- 		<br />
+    Max range: <input type="number" value="10" id="maxRange" />
+    <br />
     <canvas id="canvas" width="700px" height="700px"></canvas>
-		<script src="script.js"></script>
   </body>
 </html>

@@ -1,81 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Document</title>
-    <script src="vizualizer.js"></script>
-    <script type="text/javascript">
-      var tree = null;
-      var nodeBreak = 0;
-      var deepCount = 0;
-      var currentHeight = 0;
-      var nodeDistance = 50;
-      var nodeRadius = 20;
+	<head>
+		<title>Document</title>
+		<script src="vizualizer.js"></script>
+		<script type="text/javascript">
+			var tree = null;
+var nodeBreak = 0;
+var deepCount = 0;
+var currentHeight = 0;
+var nodeDistance = 50;
+var nodeRadius = 20;
 
-      class Tree {
-        constructor(value, left, right) {
-          this.value = value;
-          this.left = left;
-          this.right = right;
-        }
-      }
+class Tree {
+	constructor(value, left, right) {
+		this.value = value;
+		this.left = left;
+		this.right = right;
+	}
+}
 
-      function insert(node, value) {
-        while (1) {
-          if (node.value === value) return;
-          if (value > node.value && node.right) {
-            node = node.right;
-          } else if (value < node.value && node.left) {
-            node = node.left;
-          } else {
-            break;
-          }
-        }
+function insert(node, value) {
+	while (1) {
+		if (node.value === value) return;
+		if (value > node.value && node.right) {
+			node = node.right;
+		} else if (value < node.value && node.left) {
+			node = node.left;
+		} else {
+			break;
+		}
+	}
 
-        if (value > node.value) {
-          node.right = new Tree(value);
-        } else {
-          node.left = new Tree(value);
-        }
-      }
+	if (value > node.value) {
+		node.right = new Tree(value);
+	} else {
+		node.left = new Tree(value);
+	}
+}
 
-      function random_tree() {
-        nodeBreak = 0;
-        maxRange = document.getElementById("maxRange").value;
-        tree = new Tree(Math.round(Math.random() * maxRange));
+function random_tree() {
+	nodeBreak = 0;
+	maxRange = document.getElementById("maxRange").value;
+	tree = new Tree(Math.round(Math.random() * maxRange));
 
-        for (let i = 0; i < maxRange; ++i) {
-          insert(tree, Math.round(Math.random() * maxRange));
-        }
+	for (let i = 0; i < maxRange; ++i) {
+		insert(tree, Math.round(Math.random() * maxRange));
+	}
 
-        main();
-      }
+	main();
+}
 
-      function main() {
-        if (!tree) random_tree();
-        var canvas = document.getElementById("canvas");
+function main() {
+	if (!tree) random_tree();
+	var canvas = document.getElementById("canvas");
 
-        if (canvas.getContext) {
-          window.ctx = canvas.getContext("2d");
-          ctx.clearRect(10, 10, canvas.width, canvas.height);
-          ctx.font = "15px Arial";
+	if (canvas.getContext) {
+		window.ctx = canvas.getContext("2d");
+		ctx.clearRect(10, 10, canvas.width, canvas.height);
+		ctx.font = "15px Arial";
 
-          currentHeight = 0;
-          init_nodes_and_edges(canvas.width / 2, nodeDistance, tree);
-        }
-      }
-    </script>
-  </head>
-  <body onload="main();">
-    <font color="lightgray">white - unvisited nodes</font>
-    <br />
-    <font color="gray">gray - current nodes</font>
-    <br />
-    <font color="black">black - nodes in the recursion stack</font>
-    <br />
-    <button onClick="draw()">Next step</button>
-    <button onClick="random_tree()">Random tree</button>
-    Max range: <input type="number" value="10" id="maxRange" />
-    <br />
-    <canvas id="canvas" width="700px" height="700px"></canvas>
-  </body>
+		currentHeight = 0;
+		init_nodes_and_edges(canvas.width / 2, nodeDistance, tree);
+	}
+}
+		</script>
+	</head>
+	<body onload="main();">
+		<font color="lightgray">white - unvisited nodes</font>
+		<br />
+		<font color="gray">gray - current nodes</font>
+		<br />
+		<font color="black">black - nodes in the recursion stack</font>
+		<br />
+		<button onClick="draw()">Next step</button>
+		<button onClick="random_tree()">Random tree</button>
+		Max range: <input type="number" value="10" id="maxRange" />
+		<br />
+		<canvas id="canvas" width="700px" height="700px"></canvas>
+	</body>
 </html>

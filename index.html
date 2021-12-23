@@ -7,6 +7,7 @@
       var tree = null;
       var nodeBreak = 0;
       var deepCount = 0;
+      var currentHeight = 0;
       var nodeDistance = 50;
       var nodeRadius = 20;
 
@@ -58,7 +59,7 @@
           ctx.clearRect(10, 10, canvas.width, canvas.height);
           ctx.font = "15px Arial";
 
-          height = 0;
+          currentHeight = 0;
           init_nodes_and_edges(canvas.width / 2, nodeDistance, tree);
         }
       }

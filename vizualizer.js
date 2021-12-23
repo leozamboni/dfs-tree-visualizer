@@ -12,14 +12,14 @@ function draw_edge(x, y, direction) {
       direction ? x + nodeRadius / 2 : x - nodeRadius / 2, y + nodeRadius)
   ctx.lineTo(
       direction ? x + nodeDistance : x - nodeDistance,
-      y + nodeDistance + height)
+      y + nodeDistance + currentHeight)
   ctx.stroke();
 }
 
 function init_nodes_and_edges(x, y, node) {
   if (!node) return;
 
-  height += 10;
+  currentHeight += 10;
 
   if (node.left) draw_edge(x, y, false);
 
@@ -30,52 +30,52 @@ function init_nodes_and_edges(x, y, node) {
 
   draw_node(x, y, 'white');
 
-  init_nodes_and_edges(x - nodeDistance, y + nodeDistance + height, node.left);
+  init_nodes_and_edges(x - nodeDistance, y + nodeDistance + currentHeight, node.left);
 
   if (node.right) draw_edge(x, y, true);
 
-  init_nodes_and_edges(x + nodeDistance, y + nodeDistance + height, node.right);
+  init_nodes_and_edges(x + nodeDistance, y + nodeDistance + currentHeight, node.right);
 }
 
 function set_gray_nodes(x, y, node, i) {
   if (!node || deepCount === i) return;
 
-  height += 10;
+  currentHeight += 10;
 
   draw_node(x, y, 'gray');
 
-  set_gray_nodes(x - nodeDistance, y + nodeDistance + height, node.left, i);
+  set_gray_nodes(x - nodeDistance, y + nodeDistance + currentHeight, node.left, i);
 
   if (!(node.left)) {
     deepCount++;
     draw_node(x, y, 'black');
   }
 
-  set_gray_nodes(x + nodeDistance, y + nodeDistance + height, node.right, i);
+  set_gray_nodes(x + nodeDistance, y + nodeDistance + currentHeight, node.right, i);
 }
 
 function set_black_nodes(x, y, node, i) {
   if (!node || deepCount === i) return;
 
-  height += 10;
+  currentHeight += 10;
 
-  set_black_nodes(x - nodeDistance, y + nodeDistance + height, node.left, i);
+  set_black_nodes(x - nodeDistance, y + nodeDistance + currentHeight, node.left, i);
 
   if (!(node.left)) deepCount++;
 
   draw_node(x, y, 'black');
 
-  set_black_nodes(x + nodeDistance, y + nodeDistance + height, node.right, i);
+  set_black_nodes(x + nodeDistance, y + nodeDistance + currentHeight, node.right, i);
 }
 
 function draw() {
-  height = 0;
+  currentHeight = 0;
   deepCount = 0;
 
   nodeBreak++;
 
   set_gray_nodes(canvas.width / 2, nodeDistance, tree, nodeBreak);
-  height = 0;
+  currentHeight = 0;
   deepCount = 0;
 
   set_black_nodes(
